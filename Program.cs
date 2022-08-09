@@ -62,7 +62,12 @@ namespace graphconsoleapp
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var config = LoadAppSettings();
+            if (config == null)
+            {
+                Console.WriteLine("Invalid appsettings.json file.");
+                return;
+            }
         }
     }
 }
