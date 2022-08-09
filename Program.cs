@@ -83,11 +83,23 @@ namespace graphconsoleapp
 
 
             // request 2 - get specific file
-            var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
-            var request = client.Me.Drive.Items[fileId].Request();
+            // var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
+            // var request = client.Me.Drive.Items[fileId].Request();
 
-            var results = request.GetAsync().Result;
-            Console.WriteLine(results.Id + ": " + results.Name);
+            // var results = request.GetAsync().Result;
+            // Console.WriteLine(results.Id + ": " + results.Name);
+
+
+            // request 3 - download specific file
+            var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
+            var request = client.Me.Drive.Items[fileId].Content.Request();
+
+            var stream = request.GetAsync().Result;
+            var driveItemPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "driveItem_" + fileId + ".file");
+            var driveItemFile = System.IO.File.Create(driveItemPath);
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(driveItemFile);
+            Console.WriteLine("Saved file to: " + driveItemPath);
 
         }
     }
