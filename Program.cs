@@ -73,13 +73,21 @@ namespace graphconsoleapp
             Console.WriteLine("Hello " + profileResponse.DisplayName);
 
             // request 1 - get user's files
-            var request = client.Me.Drive.Root.Children.Request();
+            // var request = client.Me.Drive.Root.Children.Request();
+
+            // var results = request.GetAsync().Result;
+            // foreach (var file in results)
+            // {
+            //     Console.WriteLine(file.Id + ": " + file.Name);
+            // }
+
+
+            // request 2 - get specific file
+            var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
+            var request = client.Me.Drive.Items[fileId].Request();
 
             var results = request.GetAsync().Result;
-            foreach (var file in results)
-            {
-                Console.WriteLine(file.Id + ": " + file.Name);
-            }
+            Console.WriteLine(results.Id + ": " + results.Name);
 
         }
     }
