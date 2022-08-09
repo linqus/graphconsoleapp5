@@ -72,35 +72,19 @@ namespace graphconsoleapp
             var profileResponse = client.Me.Request().GetAsync().Result;
             Console.WriteLine("Hello " + profileResponse.DisplayName);
 
-            // request 1 - get user's files
-            // var request = client.Me.Drive.Root.Children.Request();
+            // request 1 - upload small file to user's onedrive
+            var fileName = "smallfile.txt";
+            var filePath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), fileName);
+            Console.WriteLine("Uploading file: " + fileName);
 
-            // var results = request.GetAsync().Result;
-            // foreach (var file in results)
-            // {
-            //     Console.WriteLine(file.Id + ": " + file.Name);
-            // }
-
-
-            // request 2 - get specific file
-            // var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
-            // var request = client.Me.Drive.Items[fileId].Request();
-
-            // var results = request.GetAsync().Result;
-            // Console.WriteLine(results.Id + ": " + results.Name);
-
-
-            // request 3 - download specific file
-            var fileId = "01NCXCGM64FRY3IMIYHZEKM7X6YULUCGAD";
-            var request = client.Me.Drive.Items[fileId].Content.Request();
-
-            var stream = request.GetAsync().Result;
-            var driveItemPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "driveItem_" + fileId + ".file");
-            var driveItemFile = System.IO.File.Create(driveItemPath);
-            stream.Seek(0, SeekOrigin.Begin);
-            stream.CopyTo(driveItemFile);
-            Console.WriteLine("Saved file to: " + driveItemPath);
-
+            FileStream fileStream = new FileStream(filePath, FileMode.Open);
+            var uploadedFile = client.Me.Drive.Root
+                                          .ItemWithPath("smallfile.txt")
+                                          .Content
+                                          .Request()
+                                          .PutAsync<DriveItem>(fileStream)
+                                          .Result;
+            Console.WriteLine("File uploaded to: " + uploadedFile.WebUrl);
         }
     }
 }
