@@ -38,8 +38,21 @@ namespace graphconsoleapp
         }
 
 
+        private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
+        {
+            var clientId = config["applicationId"];
+            var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
 
-        
+            List<string> scopes = new List<string>();
+            scopes.Add("https://graph.microsoft.com/.default");
+
+            var cca = PublicClientApplicationBuilder.Create(clientId)
+                                                    .WithAuthority(authority)
+                                                    .WithDefaultRedirectUri()
+                                                    .Build();
+            return MsalAuthenticationProvider.GetInstance(cca, scopes.ToArray());
+        }
+
         public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
