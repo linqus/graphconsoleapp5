@@ -68,6 +68,19 @@ namespace graphconsoleapp
                 Console.WriteLine("Invalid appsettings.json file.");
                 return;
             }
+            var client = GetAuthenticatedGraphClient(config);
+            var profileResponse = client.Me.Request().GetAsync().Result;
+            Console.WriteLine("Hello " + profileResponse.DisplayName);
+
+            // request 1 - get user's files
+            var request = client.Me.Drive.Root.Children.Request();
+
+            var results = request.GetAsync().Result;
+            foreach (var file in results)
+            {
+                Console.WriteLine(file.Id + ": " + file.Name);
+            }
+
         }
     }
 }
